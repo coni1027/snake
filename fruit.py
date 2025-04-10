@@ -13,11 +13,16 @@ class Fruit():
                                 cellSize,cellSize)
         self.spawned = False
     
-    def spawn(self,screen:pygame.surface.Surface):
-        self.posX = random.randint(0,(self.screenWidth // self.cellSize)-1)
-        self.posY = random.randint(0,(self.screenHeight // self.cellSize)-1)
-        self.rect.topleft = (self.posX*self.cellSize, self.posY*self.cellSize)
+    def spawn(self,screen:pygame.surface.Surface,snakeSegments:list,snakeHead:tuple):
+        while True:    
+            self.posX = random.randint(0,(self.screenWidth // self.cellSize)-1)
+            self.posY = random.randint(0,(self.screenHeight // self.cellSize)-1)
+            fruitPos = (self.posX, self.posY)
 
+            if fruitPos not in snakeSegments and fruitPos != snakeHead:
+                break
+        
+        self.rect.topleft = (self.posX*self.cellSize, self.posY*self.cellSize)
         pygame.draw.rect(screen,"red",self.rect)
         self.spawned = True
 

@@ -9,7 +9,7 @@ cellSize = 50
 startPos = (5,5)
 tail1 = (4,5)
 tail2 = (3,5)
-moveDelay = 80 # in ms
+moveDelay = 100 # in ms
 
 def drawGrid():
     for x in range(0, WIDTH, cellSize):
@@ -33,7 +33,7 @@ clock = pygame.time.Clock()
 font = pygame.font.Font(None,25)
 
 
-snake = Snake(cellSize,startPos,WIDTH,HEIGHT,[startPos,startPos])
+snake = Snake(cellSize,startPos,WIDTH,HEIGHT)
 fruit = Fruit(cellSize,(9,9),WIDTH,HEIGHT)
 
 lastMoveTime = pygame.time.get_ticks()
@@ -55,7 +55,7 @@ while running:
     fruit.draw(screen)
 
     if not fruit.spawned:
-        fruit.spawn(screen)
+        fruit.spawn(screen,snake.segments,(snake.headPosX,snake.headPosY))
 
     now = pygame.time.get_ticks()
     if now - lastMoveTime > moveDelay:
@@ -63,9 +63,14 @@ while running:
         lastMoveTime = now
 
     if snake.headRect.colliderect(fruit.rect):
-        print('snake collide w fruit')
         fruit.reset(screen)
         snake.grow()
+    
+    if snake.isLost:
+        print("gameover")
+        running = False
+        pygame.quit()
+        break
 
 
     pygame.display.update()

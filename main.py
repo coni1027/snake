@@ -1,5 +1,6 @@
 import pygame
 from snake import Snake
+from fruit import Fruit
 
 """CONSTANTS"""
 WIDTH = 900
@@ -8,7 +9,7 @@ cellSize = 30
 startPos = (5,5)
 tail1 = (4,5)
 tail2 = (3,5)
-moveDelay = 50 # in ms
+moveDelay = 80 # in ms
 
 def drawGrid():
     for x in range(0, WIDTH, cellSize):
@@ -17,10 +18,12 @@ def drawGrid():
             pygame.draw.rect(screen,"white",cell,1)
 
 def drawHUD():
-    snakePos = font.render(f"pos: {snake.headPosX,snake.headPosY}",True,"cyan")
+    snakePos = font.render(f"snake pos: {snake.headPosX,snake.headPosY}",True,"cyan")
+    fruitPos = font.render(f"fruit pos: {fruit.posX, fruit.posY}",True,"cyan")
     snakeLength = font.render(f"length: {snake.length}",True,"cyan")
     screen.blit(snakePos,(40,40))
-    screen.blit(snakeLength,(40,60))
+    screen.blit(fruitPos,(40,60))
+    screen.blit(snakeLength,(40,80))
     
 pygame.init()
 pygame.display.set_caption("Snake")
@@ -31,6 +34,7 @@ font = pygame.font.Font(None,25)
 
 
 snake = Snake(cellSize,startPos,[tail1,tail2])
+fruit = Fruit(cellSize,(9,9))
 
 lastMoveTime = pygame.time.get_ticks()
 
@@ -40,21 +44,27 @@ while running:
         if event.type == pygame.QUIT:
             running = False
             pygame.quit()
-
-    
-    keys = pygame.key.get_pressed()
-    
+        elif event.type == pygame.KEYDOWN:
+            snake.directionChange(event.key, pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT)
     
     screen.fill("black")
-    drawGrid()
     drawHUD()
+    drawGrid()
     
     snake.draw(screen)
+    fruit.draw(screen)
+
+    if not fruit.spawned:
+        fruit.spawn(screen,WIDTH,HEIGHT)
+
     now = pygame.time.get_ticks()
     if now - lastMoveTime > moveDelay:
         snake.update()
         lastMoveTime = now
-    snake.directionChange(keys,pygame.K_UP,pygame.K_DOWN,pygame.K_LEFT,pygame.K_RIGHT)
+
+    if snake.headRect.colliderect(fruit.rect):
+        print('snake collide w fruit')
+
 
     pygame.display.update()
     clock.tick(60)

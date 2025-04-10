@@ -5,7 +5,7 @@ from fruit import Fruit
 """CONSTANTS"""
 WIDTH = 900
 HEIGHT = 600
-cellSize = 30
+cellSize = 50
 startPos = (5,5)
 tail1 = (4,5)
 tail2 = (3,5)
@@ -33,8 +33,8 @@ clock = pygame.time.Clock()
 font = pygame.font.Font(None,25)
 
 
-snake = Snake(cellSize,startPos,[tail1,tail2])
-fruit = Fruit(cellSize,(9,9))
+snake = Snake(cellSize,startPos,WIDTH,HEIGHT,[startPos,startPos])
+fruit = Fruit(cellSize,(9,9),WIDTH,HEIGHT)
 
 lastMoveTime = pygame.time.get_ticks()
 
@@ -49,13 +49,13 @@ while running:
     
     screen.fill("black")
     drawHUD()
-    drawGrid()
+    # drawGrid()
     
     snake.draw(screen)
     fruit.draw(screen)
 
     if not fruit.spawned:
-        fruit.spawn(screen,WIDTH,HEIGHT)
+        fruit.spawn(screen)
 
     now = pygame.time.get_ticks()
     if now - lastMoveTime > moveDelay:
@@ -64,6 +64,8 @@ while running:
 
     if snake.headRect.colliderect(fruit.rect):
         print('snake collide w fruit')
+        fruit.reset(screen)
+        snake.grow()
 
 
     pygame.display.update()

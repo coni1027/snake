@@ -2,7 +2,7 @@ import pygame
 
 
 class Snake():
-    def __init__(self,cellSize,headPos:tuple,segments=None):
+    def __init__(self,cellSize,headPos:tuple,screenWidth:int,screenHeight:int,segments=None):
         self.cellSize = cellSize
         self.headPosX, self.headPosY = headPos
         self.headRect = pygame.Rect(self.headPosX*self.cellSize,
@@ -11,16 +11,27 @@ class Snake():
         if segments == None:
             segments = []
         self.segments = segments
-        self.direction = (1,0)
+        self.screenWidth = screenWidth
+        self.screenHeight = screenHeight
+        self.direction = (0,0)
         self.length = len(self.segments)+1
 
     def update(self):
         self.segments.insert(0, (self.headPosX, self.headPosY))
 
-        dx, dy = self.direction
+        dx, dy = self.direction        
         self.headPosX += dx
         self.headPosY += dy
         self.headRect.topleft = (self.headPosX * self.cellSize, self.headPosY * self.cellSize)
+
+        if self.headPosX > (self.screenWidth // self.cellSize)-1:
+            self.headPosX = 0
+        if self.headPosX < 0:
+            self.headPosX = (self.screenWidth // self.cellSize)-1
+        if self.headPosY > (self.screenHeight // self.cellSize)-1:
+            self.headPosY = 0
+        if self.headPosY < 0:
+            self.headPosY = (self.screenHeight // self.cellSize)-1
 
         if len(self.segments) > self.length-1:
             self.segments.pop()
@@ -45,3 +56,6 @@ class Snake():
             segmentRect = pygame.Rect(x*self.cellSize,y*self.cellSize,
                                       self.cellSize,self.cellSize)
             pygame.draw.rect(screen,"green",segmentRect,)
+
+    def grow(self):
+        self.length += 1

@@ -3,18 +3,19 @@ import random
 
 
 class Fruit():
-    def __init__(self,cellSize:int,startPos:tuple):
+    def __init__(self,cellSize:int,startPos:tuple,screenWidth:int,screenHeight:int):
         self.cellSize = cellSize
         self.posX,self.posY = startPos
+        self.screenWidth = screenWidth
+        self.screenHeight = screenHeight
         self.rect = pygame.Rect(self.posX*self.cellSize,
                                 self.posY*self.cellSize,
                                 cellSize,cellSize)
         self.spawned = False
     
-    #update this to be random
-    def spawn(self,screen:pygame.surface.Surface,screenWidth:int,screenHeight):
-        self.posX = random.randint(0,(screenWidth // self.cellSize)-1)
-        self.posY = random.randint(0,(screenHeight // self.cellSize)-1)
+    def spawn(self,screen:pygame.surface.Surface):
+        self.posX = random.randint(0,(self.screenWidth // self.cellSize)-1)
+        self.posY = random.randint(0,(self.screenHeight // self.cellSize)-1)
         self.rect.topleft = (self.posX*self.cellSize, self.posY*self.cellSize)
 
         pygame.draw.rect(screen,"red",self.rect)

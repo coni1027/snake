@@ -5,7 +5,7 @@ from fruit import Fruit
 """CONSTANTS"""
 WIDTH = 900
 HEIGHT = 600
-cellSize = 50
+cellSize = 30
 startPos = (5,5)
 tail1 = (4,5)
 tail2 = (3,5)

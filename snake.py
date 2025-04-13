@@ -12,6 +12,7 @@ class Snake():
         self.screenWidth = screenWidth
         self.screenHeight = screenHeight
         self.direction = (0,0)
+        self.nextDirection = (0,0)
         self.length = len(self.segments)+1
         self.isLost = False
 
@@ -19,6 +20,7 @@ class Snake():
         self.isLost = True
 
     def update(self):
+        self.direction = self.nextDirection
         self.segments.insert(0, (self.headPosX, self.headPosY))
 
         dx, dy = self.direction        
@@ -46,13 +48,13 @@ class Snake():
         currentDirection = self.direction
 
         if key == upkey and currentDirection != (0, 1):
-            self.direction = (0, -1)
+            self.nextDirection = (0, -1)
         elif key == downkey and currentDirection != (0, -1):
-            self.direction = (0, 1)
+            self.nextDirection = (0, 1)
         elif key == leftkey and currentDirection != (1, 0):
-            self.direction = (-1, 0)
+            self.nextDirection = (-1, 0)
         elif key == rightkey and currentDirection != (-1, 0):
-            self.direction = (1, 0)
+            self.nextDirection = (1, 0)
 
     def draw(self,screen):
         pygame.draw.rect(screen, "mediumseagreen", self.headRect)
